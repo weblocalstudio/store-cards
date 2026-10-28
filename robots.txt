@@ -1,0 +1,10 @@
+# Weblocal Studio – Store Cards Generator
+# https://store-cards.weblocalstudio.es
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://store-cards.weblocalstudio.es/sitemap.xml
+
+# Disallow nothing – public tool
