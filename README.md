@@ -14,13 +14,9 @@ Generador **gratuito y 100% del lado del cliente** de capturas promocionales par
 - Editor con pestañas: Fondo, Texto, Dispositivo, Exportar
 - Degradados, formas decorativas, fuentes, sombras y texto arrastrable
 - Exportación PNG/JPG en alta resolución
-- ZIP con imagen final + carpeta `favicons/`
+- Láminas separadas por dispositivo (iPhone, Android, iPad, Mac), cada una con sus propias capturas
+- Galería a pantalla completa y descarga personalizada (eliges qué láminas, en ZIP ordenado por dispositivo)
 - Interfaz Glassmorphism en modo oscuro
-
-
-## Uso online
-
-https://store-cards.weblocalstudio.es
 
 ## Uso local
 ```bash
@@ -37,12 +33,17 @@ store-cards/
 ├── script.js
 ├── robots.txt
 ├── sitemap.xml
-├── favicons/        # favicon.svg + PNGs (se generan en el ZIP)
+├── CNAME            # store-cards.weblocalstudio.es
+├── favicons/        # favicon.svg/.ico, PNGs, manifest, og-image
 └── README.md
 ```
 
 ## Favicons
-`favicon.svg` ya está incluido. Para los PNG (`favicon-16x16`, `favicon-32x32`, `apple-touch-icon`) descarga el ZIP desde la app o conviértelo con [realfavicongenerator.net](https://realfavicongenerator.net).
+Todos los favicons (SVG, ICO, PNG 16/32/180/192/512, `site.webmanifest` y `og-image.png`) están incluidos en `favicons/`.
 
 ## Licencia
+🌐 Web: https://store-cards.weblocalstudio.es
+
+Creado por [Weblocal Studio](https://www.weblocalstudio.es) con la ayuda de Claude (Anthropic).
+
 MIT © Weblocal Studio

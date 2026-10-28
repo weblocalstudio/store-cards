@@ -52,40 +52,67 @@ const swap=s=>s.ori==='l'&&s.dev!=='mac';
 const dims=s=>{const [w,h]=s.size.split('x').map(Number);return swap(s)?[h,w]:[w,h]};
 function fillSizes(){const s=S(),L=SZ[s.dev];if(!L.some(o=>o[0]+'x'+o[1]===s.size))s.size=L[0][0]+'x'+L[0][1];
  $('size').innerHTML=L.map(o=>`<option value="${o[0]}x${o[1]}">${o[2]} — ${swap(s)?o[1]+'×'+o[0]:o[0]+'×'+o[1]}</option>`).join('')}
+const SETS=[['iphone','iPhone','fa-brands fa-apple'],['android','Android','fa-brands fa-android'],['ipad','iPad','fa-solid fa-tablet-screen-button'],['mac','Mac','fa-solid fa-laptop']];
+const NAME=Object.fromEntries(SETS.map(x=>[x[0],x[1]]));let set='iphone',last=-1;
+const idx=()=>slides.map((s,i)=>i).filter(i=>slides[i].dev===set);
+const all=d=>slides.map((s,i)=>i).filter(i=>slides[i].dev===d);
+function mini(c,s,m){const [W,H]=dims(s),z=m/Math.max(W,H);c.width=W*z;c.height=H*z;const x=c.getContext('2d'),b=box;x.scale(z,z);render(x,W,H,s);box=b}
 function draw(){const s=S(),[W,H]=dims(s);cv.width=W;cv.height=H;render(ctx,W,H,s);cancelAnimationFrame(raf);raf=requestAnimationFrame(thumbs)}
-function thumbs(){const st=$('strip');while(st.children.length>slides.length)st.lastChild.remove();
- slides.forEach((s,i)=>{let t=st.children[i];if(!t){t=document.createElement('canvas');t.onclick=()=>{cur=i;sync();draw()};st.append(t)}
-  const [W,H]=dims(s),z=240/Math.max(W,H);t.width=W*z;t.height=H*z;const c=t.getContext('2d');c.scale(z,z);render(c,W,H,s);t.className=i===cur?'on':''});}
-function sync(){const s=S();fillSizes();IDS.forEach(i=>$(i).value=s[i]);CK.forEach(i=>$(i).checked=s[i]);
+function thumbs(){const st=$('strip'),L=idx();while(st.children.length>L.length)st.lastChild.remove();
+ L.forEach((i,k)=>{let t=st.children[k];if(!t){t=document.createElement('canvas');st.append(t)}t.onclick=()=>{cur=i;sync();draw()};mini(t,slides[i],240);t.className=i===cur?'on':''});
+ if(last!==cur){last=cur;st.querySelector('.on')?.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'})}
+ $('sets').innerHTML=SETS.map(([d,n,ic])=>`<button class="${d===set?'on':''}" data-d="${d}"><i class="${ic}"></i> ${n}<b>${slides.filter(s=>s.dev===d&&s.img).length||''}</b></button>`).join('');
+ $('cnt').textContent=`${L.indexOf(cur)+1} / ${L.length}`;if(!$('gal').hidden)gal()}
+function sync(){const s=S();set=s.dev;fillSizes();IDS.forEach(i=>$(i).value=s[i]);CK.forEach(i=>$(i).checked=s[i]);
  document.querySelectorAll('.seg').forEach(g=>g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===s[g.dataset.k])))}
+$('sets').onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset.d;let f=slides.findIndex(s=>s.dev===d);
+ if(f<0){slides.push({...S(),img:null,dev:d,ty:0,size:''});f=slides.length-1}cur=f;sync();draw()};
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab,.pane').forEach(e=>e.classList.remove('on'));t.classList.add('on');$('p-'+t.dataset.t).classList.add('on')});
 IDS.concat(CK).forEach(i=>$(i).addEventListener('input',()=>{S()[i]=CK.includes(i)?$(i).checked:$(i).value;draw()}));
 document.querySelectorAll('.seg').forEach(g=>g.onclick=e=>{const b=e.target.closest('button');if(!b)return;S()[g.dataset.k]=b.dataset.v;sync();draw()});
 $('presets').innerHTML=PRE.map((p,i)=>`<button data-i="${i}" style="background:linear-gradient(135deg,${p[0]},${p[1]})" aria-label="Tema ${i+1}"></button>`).join('');
 $('presets').onclick=e=>{const b=e.target.closest('button');if(!b)return;S().bg1=PRE[b.dataset.i][0];S().bg2=PRE[b.dataset.i][1];sync();draw()};
-$('allbg').onclick=()=>{const s=S();slides.forEach(x=>Object.assign(x,{bg1:s.bg1,bg2:s.bg2,angle:s.angle,shapes:s.shapes,seed:s.seed}));draw()};
+$('allbg').onclick=()=>{const s=S();idx().forEach(i=>Object.assign(slides[i],{bg1:s.bg1,bg2:s.bg2,angle:s.angle,shapes:s.shapes,seed:s.seed}));draw()};
 function addFiles(files){[...files].filter(f=>f.type.startsWith('image/')).forEach(f=>{const i=new Image();i.onload=()=>{
-  if(!S().img&&slides.length===1&&cur===0)S().img=i;else{const n={...S(),img:i,ty:0};slides.push(n);cur=slides.length-1}sync();draw()};i.src=URL.createObjectURL(f)})}
+ if(!S().img)S().img=i;else{slides.push({...S(),img:i,ty:0,dev:set});cur=slides.length-1}sync();draw()};i.src=URL.createObjectURL(f)})}
 $('drop2').onclick=$('add').onclick=()=>$('file').click();$('file').onchange=e=>{addFiles(e.target.files);e.target.value=''};
 [$('drop'),$('drop2')].forEach(z=>{['dragover','dragenter'].forEach(v=>z.addEventListener(v,e=>{e.preventDefault();z.classList.add('over')}));['dragleave','drop'].forEach(v=>z.addEventListener(v,()=>z.classList.remove('over')));z.addEventListener('drop',e=>{e.preventDefault();addFiles(e.dataTransfer.files)})});
 $('dup').onclick=()=>{slides.splice(cur+1,0,{...S()});cur++;sync();draw()};
-$('del').onclick=()=>{if(slides.length===1){slides[0]=base()}else{slides.splice(cur,1);cur=Math.max(0,cur-1)}sync();draw()};
-const mv=d=>{const j=cur+d;if(j<0||j>=slides.length)return;[slides[cur],slides[j]]=[slides[j],slides[cur]];cur=j;draw()};
-$('left').onclick=()=>mv(-1);$('right').onclick=()=>mv(1);
+$('del').onclick=()=>{const L=idx(),k=L.indexOf(cur);if(L.length===1)slides[cur]={...base(),dev:set,size:''};else{slides.splice(cur,1);const n=idx();cur=n[Math.min(k,n.length-1)]}sync();draw()};
+const go=d=>{const L=idx(),k=L.indexOf(cur)+d;if(k<0||k>=L.length)return;cur=L[k];sync();draw()};
+const mv=d=>{const L=idx(),j=L[L.indexOf(cur)+d];if(j===undefined)return;[slides[cur],slides[j]]=[slides[j],slides[cur]];cur=j;draw()};
+$('left').onclick=()=>mv(-1);$('right').onclick=()=>mv(1);$('prev').onclick=()=>go(-1);$('next').onclick=()=>go(1);
+$('strip').addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>Math.abs(e.deltaX)){e.preventDefault();$('strip').scrollLeft+=e.deltaY}},{passive:false});
+let sw=null;cv.addEventListener('touchstart',e=>{sw=e.touches.length===1?e.touches[0].clientX:null},{passive:true});
+cv.addEventListener('touchend',e=>{if(sw===null||drag)return;const d=e.changedTouches[0].clientX-sw;if(Math.abs(d)>70)go(d<0?1:-1);sw=null});
 cv.onpointerdown=e=>{const r=cv.getBoundingClientRect(),y=(e.clientY-r.top)/r.height*cv.height;if(y>=box[0]-60&&y<=box[1]+60){drag=[e.clientY,S().ty];cv.setPointerCapture(e.pointerId);cv.style.cursor='grabbing'}};
 cv.onpointermove=e=>{if(drag){S().ty=drag[1]+(e.clientY-drag[0])/cv.getBoundingClientRect().height;draw()}};
 cv.onpointerup=()=>{drag=null;cv.style.cursor='grab'};
-document.addEventListener('keydown',e=>{if(/INPUT|SELECT/.test(e.target.tagName))return;if(e.key==='ArrowLeft'&&cur>0){cur--;sync();draw()}if(e.key==='ArrowRight'&&cur<slides.length-1){cur++;sync();draw()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal').forEach(m=>m.hidden=true);if(/INPUT|SELECT/.test(e.target.tagName))return;if(e.key==='ArrowLeft')go(-1);if(e.key==='ArrowRight')go(1)});
+// Galería
+function gal(){const g=$('galgrid');g.innerHTML='';SETS.forEach(([d,n])=>{const L=all(d).filter(i=>slides[i].img||d===set);if(!L.length)return;const h=document.createElement('h3');h.textContent=`${n} · ${L.length}`;g.append(h);const w=document.createElement('div');w.className='gg';
+ L.forEach(i=>{const f=document.createElement('figure'),c=document.createElement('canvas'),p=document.createElement('figcaption');if(i===cur)f.className='on';mini(c,slides[i],360);p.textContent=dims(slides[i]).join('×');f.append(c,p);f.onclick=()=>{cur=i;sync();draw();$('gal').hidden=true};w.append(f)});g.append(w)})}
+$('galbtn').onclick=()=>{$('gal').hidden=false;gal()};
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m||e.target.closest('[data-close]'))m.hidden=true}));
+// Descarga personalizada
 const fmt=()=>$('fmt').value,ext=()=>fmt()==='jpeg'?'jpg':'png';
 const blob=(c,t)=>new Promise(r=>c.toBlob(r,t==='jpeg'?'image/jpeg':'image/png',.95));
 async function shot(s){const [W,H]=dims(s),o=document.createElement('canvas');o.width=W;o.height=H;render(o.getContext('2d'),W,H,s);return blob(o,fmt())}
 const save=(b,n)=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2e3)};
-function fav(n,full){const o=document.createElement('canvas');o.width=o.height=n;const c=o.getContext('2d'),g=c.createLinearGradient(0,0,n,n);g.addColorStop(0,S().bg1);g.addColorStop(1,'#ff4fa3');c.fillStyle=g;c.beginPath();c.roundRect(0,0,n,n,full?0:n*.22);c.fill();c.fillStyle='#fff';c.beginPath();c.roundRect(n*.3,n*.2,n*.4,n*.6,n*.07);c.fill();return o}
-$('dl').onclick=async()=>save(await shot(S()),`store-card-${cur+1}.${ext()}`);
-$('zip').onclick=async()=>{const z=new JSZip(),sl=z.folder('slides'),f=z.folder('favicons');
- for(let i=0;i<slides.length;i++)sl.file(`${String(i+1).padStart(2,'0')}-${slides[i].dev}.${ext()}`,await shot(slides[i]));
- for(const [n,s,full] of [['favicon-16x16',16],['favicon-32x32',32],['apple-touch-icon',180,1],['android-chrome-192x192',192],['android-chrome-512x512',512]])f.file(n+'.png',await blob(fav(s,full)));
- f.file('site.webmanifest',JSON.stringify({name:'Store Cards',icons:[192,512].map(s=>({src:`android-chrome-${s}x${s}.png`,sizes:`${s}x${s}`,type:'image/png'})),theme_color:'#0b0b14',display:'standalone'},null,2));
- save(await z.generateAsync({type:'blob'}),'store-cards.zip')};
+const picked=()=>[...document.querySelectorAll('#dlgrid .it input:checked')].map(x=>+x.dataset.i);
+function count(){const n=picked().length;$('dlgo').textContent=n?`Descargar ${n} ${n>1?'láminas (ZIP)':'lámina'}`:'Selecciona láminas'}
+function dlm(){const b=$('dlgrid');b.innerHTML='';SETS.forEach(([d,n])=>{const L=all(d).filter(i=>slides[i].img);if(!L.length)return;
+ const h=document.createElement('label');h.className='sethead';h.innerHTML=`<input type="checkbox" data-set="${d}" ${d===set?'checked':''}> ${n} <small>${L.length}</small>`;b.append(h);
+ const w=document.createElement('div');w.className='gg';L.forEach(i=>{const l=document.createElement('label'),c=document.createElement('canvas');l.className='it';l.innerHTML=`<input type="checkbox" data-i="${i}" data-d="${d}" ${d===set?'checked':''}>`;mini(c,slides[i],200);const sp=document.createElement('span');sp.textContent=dims(slides[i]).join('×');l.append(c,sp);w.append(l)});b.append(w)});
+ if(!b.children.length)b.innerHTML='<p class="note">Sube capturas para poder descargar.</p>';count()}
+$('dlgrid').addEventListener('change',e=>{const d=e.target.dataset.set;if(d)document.querySelectorAll(`#dlgrid [data-d="${d}"]`).forEach(x=>x.checked=e.target.checked);count()});
+$('selall').onclick=()=>{document.querySelectorAll('#dlgrid input').forEach(x=>x.checked=true);count()};
+$('selnone').onclick=()=>{document.querySelectorAll('#dlgrid input').forEach(x=>x.checked=false);count()};
+$('dlopen').onclick=()=>{$('dlm').hidden=false;dlm()};
+$('dl').onclick=async()=>save(await shot(S()),`store-card-${S().dev}-${cur+1}.${ext()}`);
+$('dlgo').onclick=async()=>{const P=picked();if(!P.length)return;
+ if(P.length===1){const s=slides[P[0]];return save(await shot(s),`${s.dev}-${dims(s).join('x')}.${ext()}`)}
+ const z=new JSZip(),n={};for(const i of P){const s=slides[i],d=s.dev;n[d]=(n[d]||0)+1;z.folder(NAME[d]).file(`${String(n[d]).padStart(2,'0')}-${dims(s).join('x')}.${ext()}`,await shot(s))}
+ save(await z.generateAsync({type:'blob'}),'store-cards-screenshots.zip')};
 sync();document.fonts.ready.then(draw);draw();
 })();

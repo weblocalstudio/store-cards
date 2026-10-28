@@ -48,3 +48,23 @@ input[type=range]{accent-color:var(--ac);width:100%}input[type=checkbox]{accent-
 .presets{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.presets button{aspect-ratio:1;border-radius:12px;border:2px solid var(--b);cursor:pointer;transition:transform .35s var(--e)}.presets button:hover{transform:scale(1.12) rotate(4deg)}
 @media(max-width:900px){.tools{flex-direction:column}#strip canvas{height:64px}}
 .note{font-size:11px;opacity:.6;line-height:1.4}.note i{color:#4ade80;margin-right:4px}
+
+.stage{display:flex;flex-direction:column;align-items:center;gap:12px}.strip{margin-top:0}
+.sets{display:flex;gap:6px;padding:5px;background:var(--g);border:1px solid var(--b);border-radius:18px;backdrop-filter:blur(20px);max-width:100%;overflow-x:auto}
+.sets button{display:flex;gap:6px;align-items:center;padding:9px 14px;border-radius:13px;border:0;background:none;color:#fffa;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap;transition:all .4s var(--e)}
+.sets button.on{background:#ffffff24;color:#fff;box-shadow:0 6px 18px #0006}.sets b{background:var(--ac);border-radius:99px;font-size:10px;padding:1px 7px}.sets b:empty{display:none}
+.nav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:1px solid var(--b);background:#0006;backdrop-filter:blur(12px);color:#fff;cursor:pointer;z-index:2;opacity:0;transition:all .35s var(--e)}
+.canvas-wrap:hover .nav,.canvas-wrap:focus-within .nav{opacity:1}.nav.l{left:10px}.nav.r{right:10px}.nav:hover{background:#ffffff33;scale:1.1}
+@media(hover:none){.nav{opacity:.8;width:36px;height:36px}}
+.cnt{position:absolute;top:10px;right:12px;font-size:11px;padding:4px 10px;border-radius:99px;background:#0007;backdrop-filter:blur(10px)}
+.modal{position:fixed;inset:0;z-index:50;background:#000a;backdrop-filter:blur(10px);display:grid;place-items:center;padding:14px;animation:fade .3s}.modal[hidden]{display:none!important}
+@keyframes fade{from{opacity:0}}
+.sheet{width:min(980px,100%);max-height:92dvh;overflow:auto;padding:18px;animation:rise .5s var(--e);background:#14142288}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.sh h2{font-weight:800;font-size:20px}
+.x{width:38px;height:38px;border-radius:12px;border:1px solid var(--b);background:var(--g);color:#fff;cursor:pointer}
+.gg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin:10px 0 18px;align-items:end}
+#galgrid h3,.sethead{font-weight:700;font-size:14px;margin-top:8px;display:flex;gap:8px;align-items:center}.sethead small{opacity:.6}
+.gg figure,.gg .it{margin:0;cursor:pointer;display:flex;flex-direction:column;gap:6px;align-items:center;font-size:11px;opacity:.85;transition:all .4s var(--e);position:relative}
+.gg figure:hover,.gg .it:hover{opacity:1;transform:translateY(-4px)}.gg canvas{max-width:100%;max-height:220px;width:auto;height:auto;border-radius:12px;border:2px solid transparent;box-shadow:0 10px 30px #0008;cursor:pointer}
+.gg figure.on canvas{border-color:var(--ac)}.it input{position:absolute;top:8px;left:8px;z-index:1;width:20px;height:20px;accent-color:var(--ac)}
+.bar{display:flex;gap:8px;margin-bottom:6px}.chip{padding:8px 14px;border-radius:12px;border:1px solid var(--b);background:var(--g);color:#fff;font-weight:600;font-size:13px;cursor:pointer}.bar select{margin-left:auto}
