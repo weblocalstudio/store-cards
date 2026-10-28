@@ -19,9 +19,8 @@ Generador **gratuito y 100% del lado del cliente** de capturas promocionales par
 
 
 ## Uso online
-```bash
+
 https://store-cards.weblocalstudio.es
-```
 
 ## Uso local
 ```bash
