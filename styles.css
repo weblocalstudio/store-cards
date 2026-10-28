@@ -1,0 +1,50 @@
+:root{--g:rgba(255,255,255,.07);--b:rgba(255,255,255,.14);--ac:#8b6cff;--e:cubic-bezier(.22,1,.36,1)}
+*{box-sizing:border-box}html{-webkit-tap-highlight-color:transparent}
+body{font-family:Inter,system-ui,sans-serif;background:#0b0b14;min-height:100dvh;overflow-x:hidden;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.aurora{position:fixed;inset:0;z-index:-1;background:radial-gradient(60% 50% at 15% 10%,#4b2fd966,transparent),radial-gradient(50% 50% at 90% 90%,#ff4fa355,transparent),#0b0b14;animation:drift 18s ease-in-out infinite alternate;filter:saturate(1.2)}
+@keyframes drift{to{transform:scale(1.15) translate(-2%,2%)}}
+.glass{background:var(--g);border:1px solid var(--b);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);box-shadow:0 20px 60px -20px #000a,inset 0 1px 0 #ffffff22;border-radius:22px}
+.top{display:flex;justify-content:space-between;align-items:center;margin:14px;padding:12px 16px;animation:rise .8s var(--e) both}
+.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--ac),#ff4fa3);box-shadow:0 8px 24px #8b6cff66}
+.btn-ghost,.btn{border:1px solid var(--b);background:var(--g);color:#fff;padding:9px 16px;border-radius:14px;font-weight:600;font-size:14px;cursor:pointer;transition:transform .35s var(--e),background .3s,box-shadow .3s}
+.btn-ghost:hover,.btn:hover{transform:translateY(-2px) scale(1.02);background:#ffffff1f}
+.btn:active,.btn-ghost:active{transform:scale(.97)}
+.btn{width:100%;margin-top:10px;padding:14px;background:linear-gradient(135deg,var(--ac),#ff4fa3);border:0;box-shadow:0 12px 30px -8px #8b6cffaa}
+.btn.alt{background:var(--g);border:1px solid var(--b);box-shadow:none}
+.layout{display:grid;grid-template-columns:1fr 380px;gap:16px;padding:0 14px;max-width:1400px;margin:auto}
+.stage{display:grid;place-items:center;min-height:60vh;animation:rise .9s .1s var(--e) both}
+.canvas-wrap{position:relative;max-height:calc(100dvh - 130px);max-width:100%;border-radius:26px;overflow:hidden;box-shadow:0 40px 100px -30px #000,0 0 0 1px var(--b);transition:box-shadow .4s,transform .5s var(--e)}
+.canvas-wrap.over{transform:scale(1.02);box-shadow:0 0 0 3px var(--ac),0 40px 100px -30px #000}
+canvas{display:block;max-width:100%;max-height:calc(100dvh - 130px);width:auto;height:auto;touch-action:none;cursor:grab}
+.hint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:11px;padding:6px 12px;border-radius:99px;background:#0008;backdrop-filter:blur(10px);opacity:.8;pointer-events:none;white-space:nowrap}
+.panel{padding:14px;align-self:start;position:sticky;top:14px;animation:rise .9s .2s var(--e) both}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;background:#0004;border-radius:16px;margin-bottom:14px}
+.tab{background:none;border:0;color:#fff9;padding:9px 4px;border-radius:12px;font-size:11px;font-weight:600;display:flex;flex-direction:column;gap:4px;align-items:center;cursor:pointer;transition:all .35s var(--e)}
+.tab.on{background:#ffffff1f;color:#fff;box-shadow:0 4px 14px #0006}
+.pane{display:none;flex-direction:column;gap:12px}.pane.on{display:flex;animation:pane .5s var(--e)}
+@keyframes pane{from{opacity:0;transform:translateY(10px) scale(.98);filter:blur(4px)}}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;opacity:.9}
+label.row{flex-direction:row;justify-content:space-between;align-items:center}
+input[type=text],select{background:#0005;border:1px solid var(--b);color:#fff;border-radius:12px;padding:10px 12px;font-size:14px;outline:0;transition:border .3s,box-shadow .3s}
+input[type=text]:focus,select:focus{border-color:var(--ac);box-shadow:0 0 0 4px #8b6cff33}
+input[type=color]{width:100%;height:38px;border:1px solid var(--b);border-radius:12px;background:none;padding:2px;cursor:pointer}
+input[type=range]{accent-color:var(--ac);width:100%}input[type=checkbox]{accent-color:var(--ac);width:20px;height:20px}
+.upload{border:1.5px dashed var(--b);border-radius:16px;padding:18px;text-align:center;cursor:pointer;font-size:13px;transition:all .4s var(--e)}
+.upload:hover,.upload.over{border-color:var(--ac);background:#8b6cff1a;transform:scale(1.02)}.upload i{font-size:24px;color:var(--ac);margin-bottom:6px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:#0004;border-radius:14px}
+.seg button{background:none;border:0;color:#fff9;padding:9px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .35s var(--e)}
+.seg .on{background:#ffffff22;color:#fff}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.panel{position:static}.canvas-wrap,canvas{max-height:62dvh}.hide-sm{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.strip{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px;margin-top:12px;width:100%;max-width:100%}
+#strip{display:flex;gap:10px;overflow-x:auto;padding:4px;scrollbar-width:none;flex:1;scroll-behavior:smooth}
+#strip canvas{height:84px;width:auto;border-radius:12px;border:2px solid transparent;opacity:.65;cursor:pointer;flex:none;transition:all .4s var(--e);animation:rise .5s var(--e)}
+#strip canvas:hover{opacity:1;transform:translateY(-3px)}#strip canvas.on{border-color:var(--ac);opacity:1;box-shadow:0 8px 24px #8b6cff66;transform:scale(1.05)}
+.tools{display:flex;gap:6px;flex:none}.tools button{width:38px;height:38px;border-radius:12px;border:1px solid var(--b);background:var(--g);color:#fff;cursor:pointer;transition:all .3s var(--e)}
+.tools button:hover{background:#ffffff26;transform:translateY(-2px)}.tools #del:hover{background:#ff3b5c66}
+.stage{align-content:start;gap:0}.seg.four{grid-template-columns:repeat(4,1fr)}.seg.four button{display:flex;flex-direction:column;gap:3px;font-size:11px;align-items:center}
+.presets{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.presets button{aspect-ratio:1;border-radius:12px;border:2px solid var(--b);cursor:pointer;transition:transform .35s var(--e)}.presets button:hover{transform:scale(1.12) rotate(4deg)}
+@media(max-width:900px){.tools{flex-direction:column}#strip canvas{height:64px}}
+.note{font-size:11px;opacity:.6;line-height:1.4}.note i{color:#4ade80;margin-right:4px}

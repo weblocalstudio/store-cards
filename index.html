@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Store Cards — Capturas para App Store y Google Play | Weblocal Studio</title>
+<meta name="description" content="Genera capturas promocionales para App Store y Google Play gratis, 100% en tu navegador. Open Source por Weblocal Studio.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="author" content="Weblocal Studio">
+<meta name="theme-color" content="#0b0b14">
+<link rel="canonical" href="https://weblocalstudio.github.io/store-cards/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Store Cards — Capturas para App Store y Google Play">
+<meta property="og:description" content="Editor gratuito y Open Source, sin servidores. Todo ocurre en tu navegador.">
+<meta property="og:url" content="https://weblocalstudio.github.io/store-cards/">
+<meta property="og:image" content="https://weblocalstudio.github.io/store-cards/favicons/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Store Cards by Weblocal Studio">
+<meta name="twitter:description" content="Capturas promocionales para stores, gratis y en local.">
+<link rel="icon" type="image/svg+xml" href="favicons/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Playfair+Display:wght@700&family=Space+Grotesk:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="text-white">
+<div class="aurora" aria-hidden="true"></div>
+<header class="glass top"><div class="flex items-center gap-3"><span class="logo"><i class="fa-solid fa-layer-group"></i></span>
+<div><h1 class="font-extrabold leading-none">Store Cards</h1><p class="text-xs opacity-60">by Weblocal Studio</p></div></div>
+<a class="btn-ghost" href="https://github.com/weblocalstudio/store-cards" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> <span class="hide-sm">GitHub</span></a></header>
+
+<main class="layout">
+<section class="stage" aria-label="Vista previa">
+<div id="drop" class="canvas-wrap"><canvas id="cv"></canvas>
+<div class="hint"><i class="fa-solid fa-hand-pointer"></i> Arrastra el texto para moverlo</div></div>
+<div class="strip glass"><div id="strip"></div><div class="tools"><button id="add" title="Añadir imágenes"><i class="fa-solid fa-plus"></i></button><button id="dup" title="Duplicar"><i class="fa-regular fa-clone"></i></button><button id="left" title="Mover izquierda"><i class="fa-solid fa-arrow-left"></i></button><button id="right" title="Mover derecha"><i class="fa-solid fa-arrow-right"></i></button><button id="del" title="Eliminar"><i class="fa-solid fa-trash"></i></button></div></div>
+</section>
+
+<aside class="glass panel" aria-label="Editor">
+<nav class="tabs" role="tablist">
+<button class="tab on" data-t="bg"><i class="fa-solid fa-palette"></i><span>Fondo</span></button>
+<button class="tab" data-t="tx"><i class="fa-solid fa-font"></i><span>Texto</span></button>
+<button class="tab" data-t="dv"><i class="fa-solid fa-mobile-screen"></i><span>Dispositivo</span></button>
+<button class="tab" data-t="ex"><i class="fa-solid fa-download"></i><span>Exportar</span></button>
+</nav>
+<div class="pane on" id="p-bg">
+<label>Color A<input type="color" id="bg1" value="#7c5cff"></label>
+<label>Color B<input type="color" id="bg2" value="#0b0b14"></label>
+<label>Ángulo <output></output><input type="range" id="angle" min="0" max="360" value="145"></label>
+<label class="row"><span>Formas decorativas</span><input type="checkbox" id="shapes" checked></label>
+<label>Variación <input type="range" id="seed" min="1" max="99" value="7"></label>
+<div class="presets" id="presets"></div>
+<button class="btn alt" id="allbg"><i class="fa-solid fa-wand-magic-sparkles"></i> Aplicar fondo a todas</button>
+</div>
+<div class="pane" id="p-tx">
+<label>Título<input type="text" id="title" value="Tu app, en tu bolsillo"></label>
+<label>Subtítulo<input type="text" id="sub" value="Diseño limpio. Experiencia fluida."></label>
+<label>Fuente<select id="font"><option>Inter</option><option>Playfair Display</option><option>Space Grotesk</option></select></label>
+<label>Tamaño<input type="range" id="tsize" min="60" max="160" value="100"></label>
+<label>Color título<input type="color" id="tc" value="#ffffff"></label>
+<label>Color subtítulo<input type="color" id="sc" value="#d6d6ee"></label>
+<label class="row"><span>Sombra</span><input type="checkbox" id="shadow" checked></label>
+<label>Posición<select id="pos"><option value="top">Arriba</option><option value="bottom">Abajo</option></select></label>
+</div>
+<div class="pane" id="p-dv">
+<div id="drop2" class="upload"><i class="fa-solid fa-cloud-arrow-up"></i><p>Suelta varias capturas o toca para elegir</p><input type="file" id="file" accept="image/*" multiple hidden></div>
+<div class="seg four" data-k="dev"><button class="on" data-v="iphone"><i class="fa-brands fa-apple"></i>iPhone</button><button data-v="android"><i class="fa-brands fa-android"></i>Android</button><button data-v="ipad"><i class="fa-solid fa-tablet-screen-button"></i>iPad</button><button data-v="mac"><i class="fa-solid fa-laptop"></i>Mac</button></div>
+<div class="seg" data-k="ori"><button class="on" data-v="p"><i class="fa-solid fa-mobile"></i> Vertical</button><button data-v="l"><i class="fa-solid fa-mobile fa-rotate-90"></i> Apaisado</button></div>
+<label>Escala <input type="range" id="dscale" min="50" max="130" value="100"></label>
+<label>Inclinación <input type="range" id="rot" min="-25" max="25" value="0"></label>
+<label>Marco<select id="frame"><option value="#0a0a0f">Negro</option><option value="#d8d8de">Plata</option><option value="#3b3b52">Grafito</option><option value="#c9a77c">Oro</option></select></label>
+</div>
+<div class="pane" id="p-ex">
+<label>Tamaño de la lámina<select id="size"></select></label><p class="note"><i class="fa-solid fa-circle-check"></i> La lámina cambia a medidas oficiales según el dispositivo y la orientación.</p>
+<label>Formato<select id="fmt"><option value="png">PNG</option><option value="jpeg">JPG</option></select></label>
+<button class="btn" id="dl"><i class="fa-solid fa-image"></i> Descargar esta lámina</button>
+<button class="btn alt" id="zip"><i class="fa-solid fa-file-zipper"></i> ZIP: todas + favicons</button>
+</div>
+</aside>
+</main>
+<footer class="text-center text-xs opacity-50 py-6">MIT · Hecho con ♥ por <a href="https://github.com/weblocalstudio/store-cards" class="underline">Weblocal Studio</a> · Todo se procesa en tu navegador</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
