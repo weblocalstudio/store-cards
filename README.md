@@ -17,6 +17,12 @@ Generador **gratuito y 100% del lado del cliente** de capturas promocionales par
 - ZIP con imagen final + carpeta `favicons/`
 - Interfaz Glassmorphism en modo oscuro
 
+
+## Uso online
+```bash
+https://store-cards.weblocalstudio.es
+```
+
 ## Uso local
 ```bash
 git clone https://github.com/weblocalstudio/store-cards.git
